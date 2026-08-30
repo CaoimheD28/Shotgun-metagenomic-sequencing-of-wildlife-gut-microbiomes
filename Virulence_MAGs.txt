@@ -1,0 +1,28 @@
+#!/bin/bash -l
+#SBATCH --job-name=vir_SAMPLE_reads
+#SBATCH --output=vir_SAMPLE_%j.out
+#SBATCH --error=vir_SAMPLE_%j.err
+#SBATCH -N 1
+#SBATCH --cpus-per-task=4
+#SBATCH -t 3:00:00
+
+
+# Activate environment
+conda activate vf_assembly
+
+# Folder containing MAG bins
+BIN_DIR="/PATH/TO/BINS"
+
+# Folder for outputs
+OUTDIR="/PATH/TO/METABAT2_OUTPUT_FOLDER/bins_vir"
+
+
+# Loop over each bin in the folder
+for MAG in ${BIN_DIR}/*.fa; do
+    BASENAME=$(basename ${MAG} .fasta)
+    BIN_OUT="${OUTDIR}/${BASENAME}"
+    mkdir -p ${BIN_OUT}
+
+    # ---- ABRicate ----
+    abricate --db vfdb ${MAG} > ${BIN_OUT}/${BASENAME}_vf_abricate.tab
+    abricate --summary ${BIN_OUT}/${BASENAME}_vf_abricate.tab > ${BIN_OUT}/${BASENAME}_vf_abricate_summary.tsv

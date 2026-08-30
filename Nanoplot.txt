@@ -1,0 +1,8 @@
+#!/bin/bash -l
+#SBATCH --job-name=nano_SAMPLE
+#SBATCH -N 1
+#SBATCH --cpus-per-task=4
+#SBATCH -t 99:00:00
+
+conda activate nanoplot_env
+NanoPlot --fastq PATH/TO/FASTQ --plots hex dot --outdir SAMPLE_LENGTH_nanoplot_hexdot_raw_output

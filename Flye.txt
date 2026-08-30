@@ -1,0 +1,9 @@
+#!/bin/bash -l
+#SBATCH --job-name=flyeSAMPLE
+#SBATCH -N 1
+#SBATCH --cpus-per-task=4
+#SBATCH -t 99:00:00
+
+conda activate metaflye
+
+flye --meta --nano-raw /PATH/TO/FASTQ --threads 4 --out-dir /PATH/TO/OUTPUT_FOLDER/SAMPLE_ASSEMBLY_OUTPUT

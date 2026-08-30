@@ -1,0 +1,36 @@
+#!/bin/bash -l
+#SBATCH --job-name=bracken
+#SBATCH --output=bracken%j.out
+#SBATCH --error=bracken%j.err
+#SBATCH -N 1
+#SBATCH --cpus-per-task=4
+#SBATCH -t 10:00:00
+
+conda activate kraken2_env
+
+### Paths
+KRAKEN_REPORT_DIR="/PATH/TO/KRAKENREPORTS_FOLDER"
+BRACKEN_OUT_DIR="/PATH/TO/KRAKEN_FOLDER"
+KRAKEN_DB="/PATH/TO/kraken2_db/k2_standard_08gb_20240112"
+READ_LENGTH=300
+
+
+### Loop through all Kraken2 report files
+for REPORT in ${KRAKEN_REPORT_DIR}/*_kraken2_report.txt; do
+
+    SAMPLE=$(basename ${REPORT} _kraken2_report.txt)
+    OUTFILE="${BRACKEN_OUT_DIR}/${SAMPLE}_bracken_REQUIRED_LEVEL.txt"
+
+    bracken \
+        -d ${KRAKEN_DB} \
+        -i ${REPORT} \
+        -o ${OUTFILE} \
+        -r ${READ_LENGTH} \
+        -l REQUIRED_LEVEL \
+        -t 0
+
+
+### Combine all Bracken outputs into a single table
+bracken_combine_outputs.py \
+    --files ${BRACKEN_OUT_DIR}/*_bracken_REQUIRED_LEVEL.txt \
+    -o ${BRACKEN_OUT_DIR}/bracken_REQUIRED_LEVEL_merged.tsv

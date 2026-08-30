@@ -1,0 +1,24 @@
+#!/bin/bash -l
+#SBATCH --job-name=checkm2_SAMPLE
+#SBATCH --output=checkm2_%j.out
+#SBATCH --error=checkm2_%j.err
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=16
+#SBATCH --time=14-00:00:00
+
+# Load conda and activate your CheckM2 environment
+source ~/.bashrc
+conda activate checkm2
+
+# Define paths
+BIN_DIR=/PATH/TO/BINS
+OUT_DIR=/PATH/TO/METABAT2_OUTPUT_FOLDER
+DB_FILE=/PATH/TO/checkm2_db/CheckM2_database/uniref100.KO.1.dmnd
+
+# Run CheckM2 predict workflow
+checkm2 predict \
+  --input $BIN_DIR \
+  --output-directory $OUT_DIR \
+  -x fa \
+  --threads 16 \
+  --database_path $DB_FILE

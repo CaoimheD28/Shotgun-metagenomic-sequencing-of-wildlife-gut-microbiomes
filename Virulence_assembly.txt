@@ -1,0 +1,22 @@
+#!/bin/bash -l
+#SBATCH --job-name=vir_SAMPLE_assem
+#SBATCH --output=vir_SAMPLE_%j.out
+#SBATCH --error=vir_SAMPLE_%j.err
+#SBATCH -N 1
+#SBATCH --cpus-per-task=4
+#SBATCH -t 3:00:00
+
+
+# Activate environment
+conda activate vf_assembly
+
+# Paths
+READ_DIR="/PATH/TO/ASSEMBLY.fasta"
+OUTDIR="/PATH/TO/OUTPUT_FOLDER"
+
+# Run Abricate
+abricate --db vfdb $READ_DIR > $OUTDIR/SAMPLE_assem_abricate.txt
+
+# Generate summary
+abricate --summary $OUTDIR/SAMPLE_assem_abricate.txt > $OUTDIR/SAMPLE_assem_summary.txt
+

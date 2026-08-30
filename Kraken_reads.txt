@@ -1,0 +1,15 @@
+#!/bin/bash -l
+#SBATCH --job-name=kraken_reads_SAMPLE
+#SBATCH --output=/PATH/TO/OUTPUT_FILE%j.out
+#SBATCH --error=/PATH/TO/OUTPUT_FILE%j.err
+#SBATCH -N 1
+#SBATCH --cpus-per-task=4
+#SBATCH -t 99:00:00
+
+conda activate kraken2_env
+
+kraken2 --db /PATH/TO/KRAKEN_DATABASE/k2_standard_08gb_20240112 \
+        --input /PATH/TO/FASTQ \
+        --output /PATH/TO/OUTPUT_FILE/SAMPLE_kraken2_reads_output.txt \
+        --report /PATH/TO/OUTPUT_FILE/SAMPLE_kraken2_reads_report.txt \
+        --threads 4

@@ -1,0 +1,22 @@
+#!/bin/bash -l
+#SBATCH --job-name=align_SAMPLE
+#SBATCH --output=align_SAMPLE_%j.out
+#SBATCH --error=align_SAMPLE_%j.err
+#SBATCH --time=99:00:00
+#SBATCH --cpus-per-task=16
+
+
+conda activate align_env
+
+# Step 1: Align reads to the assembly
+minimap2 -ax map-ont -t 8 \
+  /PATH/TO/ASSEMBLY.fasta \
+  /PATH/TO/FASTQ \
+  > /PATH/TO/ALIGNMENT.sam 
+
+# Step 2: Convert SAM to sorted BAM
+samtools view -@ 8 -bS /PATH/TO/ALIGNMENT.sam | \
+  samtools sort -@ 8 -o /PATH/TO/ALIGNMENT.sorted.bam
+
+# Step 3: Index the BAM file
+samtools index /PATH/TO/ALIGNMENT.sorted.bam

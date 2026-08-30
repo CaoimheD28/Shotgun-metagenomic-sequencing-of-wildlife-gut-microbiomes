@@ -1,0 +1,15 @@
+#!/bin/bash -l
+#SBATCH --job-name=kraken_assem_SAMPLE
+#SBATCH --output=kraken2_assem_SAMPLE%j.out
+#SBATCH --error=kraken2_assem_SAMPLE%j.err
+#SBATCH -N 1
+#SBATCH --cpus-per-task=4
+#SBATCH -t 99:00:00
+
+conda activate kraken2_env
+
+kraken2 --db /PATH/TO/kraken2_db/k2_standard_08gb_20240112 \
+        --input /PATH/TO/ASSEMBLY.fasta \
+        --output /PATH/TO/OUTPUT_FOLDER/SAMPLE_kraken2_output.txt \
+        --report /PATH/TO/OUTPUT_FOLDER/SAMPLE_kraken2_report.txt \
+        --threads 4

@@ -1,0 +1,23 @@
+#!/bin/bash
+#SBATCH --job-name=quast_SAMPLE
+#SBATCH --output=/PATH/TO/OUTPUT_FOLDER/SAMPLE_%j.out
+#SBATCH --error=/PATH/TO/OUTPUT_FOLDER/SAMPLE_%j.err
+#SBATCH -t 48:00:00
+#SBATCH --cpus-per-task=4
+
+# --- Load environment ---
+module load anaconda3/2024.10-1
+source /opt/software/el9/anaconda3/2024.10-1/etc/profile.d/conda.sh
+conda activate metaquast
+
+# --- Paths ---
+ASSEMBLY="/PATH/TO/ASSEMBLY.fasta"
+READS="/PATH/TO/FASTQ"
+OUTDIR="/PATH/TO/OUTPUT_FOLDER"
+
+# --- Run QUAST ---
+quast.py "$ASSEMBLY" \
+    -o "$OUTDIR" \
+    --threads $SLURM_CPUS_PER_TASK \
+    --fast \
+    --nanopore "$READS"

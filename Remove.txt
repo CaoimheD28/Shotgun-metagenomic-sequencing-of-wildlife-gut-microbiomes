@@ -1,0 +1,31 @@
+#!/bin/bash -l
+#SBATCH --job-name=remove_SAMPLE
+#SBATCH --output=/PATH/TO/FOLDER%j.out
+#SBATCH --error=/PATH/TO/FOLDER%j.err
+#SBATCH -N 1
+#SBATCH --cpus-per-task=16
+#SBATCH -t 99:00:00
+
+conda activate align_env
+
+
+# Set variables
+REF=/PATH/TO/REFERENCE_GENOME
+READS=PATH/TO/FASTQ
+INDEX=SPECIES.mmi
+THREADS=16
+
+# STEP 1: Index the fox genome (only needs to be done once)
+minimap2 -d $INDEX $REF
+
+# STEP 2: Align ONT reads to fox genome
+minimap2 -ax map-ont -t $THREADS $INDEX $READS | samtools view -bS - > mapped.bam
+
+# STEP 3: Sort BAM
+samtools sort -@ $THREADS -o mapped.sorted.bam mapped.bam
+
+# STEP 4: Extract unmapped reads (i.e., non-host)
+samtools view -@ $THREADS -b -f 4 mapped.sorted.bam > unmapped.bam
+
+# STEP 5: Convert unmapped reads back to FASTQ
+samtools fastq -@ $THREADS unmapped.bam > non_host_reads.fastq

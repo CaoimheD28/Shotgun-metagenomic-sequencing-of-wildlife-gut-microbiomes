@@ -1,0 +1,12 @@
+#!/bin/bash -l
+#SBATCH --job-name=abricate_res_mags_SAMPLE
+#SBATCH -N 1
+#SBATCH --cpus-per-task=8
+#SBATCH -t 99:00:00
+
+conda activate abricate_env
+
+for bin in /PATH/TO/BINS/*.fa; do
+    bin_name=$(basename "$bin" .fa)
+    abricate --db resfinder "$bin" > "/PATH/TO/METABAT2_OUTPUT_FOLDER/resfinder/${bin_name}_ResFinder_annotation.txt"
+

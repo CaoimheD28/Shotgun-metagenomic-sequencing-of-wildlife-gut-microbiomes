@@ -1,0 +1,29 @@
+#!/bin/bash -l
+#SBATCH --job-name=amrfinderplus_SAMPLE
+#SBATCH -N 1
+#SBATCH --cpus-per-task=8
+#SBATCH -t 99:00:00
+
+
+# Load conda and activate AMRFinderPlus environment
+conda activate amrfinder
+
+# Path to the assembly
+ASSEMBLY=/PATH/TO/ASSEMBLY.fasta
+
+# Output directory
+OUT_DIR=/PATH/TO/OUTPUT_FOLDER
+mkdir -p $OUT_DIR
+
+# Base name for output
+BASENAME=$(basename $ASSEMBLY .fasta)
+
+echo "Processing assembly: $ASSEMBLY"
+
+# Run AMRFinderPlus
+amrfinder \
+    -n $ASSEMBLY \
+    --threads 8 \
+    -o ${OUT_DIR}/${BASENAME}_amrfinder.tsv
+
+echo "AMRFinderPlus finished for assembly: $ASSEMBLY"

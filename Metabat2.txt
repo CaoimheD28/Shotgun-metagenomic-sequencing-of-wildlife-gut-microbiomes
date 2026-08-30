@@ -1,0 +1,22 @@
+#!/bin/bash -l
+#SBATCH --job-name=binningSAMPLE
+#SBATCH --output=metabat2_SAMPLE_%j.out
+#SBATCH --error=metabat2_SAMPLE_%j.err
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=16
+#SBATCH --time=14-00:00:00
+
+
+conda activate metabat2
+
+
+jgi_summarize_bam_contig_depths \
+--outputDepth depth.txt \
+/PATH/TO/ALIGNED_SAMPLE.sorted.bam
+
+
+metabat2 -i /PATH/TO/ASSEMBLY.fasta \
+         -a depth.txt \
+         -o /PATH/TO/OUTPUT_FOLDER \
+         -m 1500 \
+

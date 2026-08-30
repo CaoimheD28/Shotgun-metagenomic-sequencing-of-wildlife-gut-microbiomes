@@ -1,0 +1,13 @@
+#!/bin/bash -l
+#SBATCH --job-name=abricate_card_MAGs_SAMPLE
+#SBATCH -N 1
+#SBATCH --cpus-per-task=8
+#SBATCH -t 99:00:00
+
+conda activate abricate_env
+
+for bin in /PATH/TO/BINS/*.fa; do
+    bin_name=$(basename "$bin" .fa)
+    abricate --db card "$bin" > "/PATH/TO/METABAT2_OUTPUT_FOLDER/card/${bin_name}_CARD_annotation.txt"
+
+

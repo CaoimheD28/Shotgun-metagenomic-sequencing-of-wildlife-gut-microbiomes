@@ -1,0 +1,21 @@
+#!/bin/bash -l
+#SBATCH --job-name=plasmidfinder_MAGs_SAMPLE
+#SBATCH -N 1
+#SBATCH --cpus-per-task=8
+#SBATCH -t 1:00:00
+
+conda activate abricate_env
+
+# Input bins directory
+BIN_DIR="/PATH/TO/BINS"
+
+# Output directory
+OUTDIR="/PATH/TO/OUTPUT_FOLDER"
+mkdir -p $OUTDIR
+
+# Get bin for this SLURM array task
+BIN=$(ls $BIN_DIR/*.fa | sed -n ${SLURM_ARRAY_TASK_ID}p)
+BASENAME=$(basename $BIN .fa)
+
+# Run ABRicate with PlasmidFinder
+abricate --db plasmidfinder $BIN > $OUTDIR/${BASENAME}_plasmidfinder.tsv

@@ -1,0 +1,19 @@
+#!/bin/bash -l
+#SBATCH --job-name=SAMPLE
+#SBATCH --output=/PATH/TO/FOLDER%j.out
+#SBATCH --error=/PATH/TO/FOLDER%j.err
+#SBATCH -N 1
+#SBATCH --cpus-per-task=16
+#SBATCH -t 99:00:00
+
+conda activate kma
+
+kma -i /PATH/TO/FASTQ \
+    -o /PATH/TO/OUTPUT_FILE \
+    -t_db /PATH/TO/RESFINDER_DATABASE \
+    -t 16 \
+    -ef \
+    -bcNano \
+    -vcf 2 \
+    -sam 4
+
